@@ -1,15 +1,33 @@
-const { ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config();
 
-exports.allProductsController = async (req, res) => {
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@portfolio.cjd9a.mongodb.net/?retryWrites=true&w=majority`;
+
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
+
+client.connect();
+
+const worksCollection = client.db('portfolio').collection('works');
+const projects = worksCollection.find({}).toArray();
+
+exports.homeController = (req, res) => {
+  res.send('Hello Mamun portfolio!');
+};
+
+exports.allProductsController = (req, res) => {
   const query = {};
   const cursor = worksCollection.find(query);
-  const projects = await cursor.toArray();
+  const projects = cursor.toArray();
   res.send(projects);
 };
 
-exports.singleProductController = async (req, res) => {
+exports.singleProductController = (req, res) => {
   const id = req.params.id;
   const query = { _id: ObjectId(id) };
-  const projects = await worksCollection.findOne(query);
+  const projects = worksCollection.findOne(query);
   res.send(projects);
 };
