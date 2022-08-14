@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
@@ -7,6 +8,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 // middleware
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
